@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-
+const validator = require('validator');
 const tourSchema = new mongoose.Schema(
   {
     name: {
@@ -9,6 +9,7 @@ const tourSchema = new mongoose.Schema(
       // Unique for not duplicating the same tour with same name
       unique: true,
       trim: true,
+      // validate: [validator.isAlpha, 'Tour name must only contain characters'],
       maxlength: [40, 'max length 40 '],
       minlength: [10, 'max length 10 '],
     },
@@ -44,7 +45,7 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'a tour must have a price'],
     },
     priceDiscount: {
-      // CUSTOME validator or use npm library validator 
+      // CUSTOME validator or use npm library validator
       type: Number,
       validate: {
         validator: function (val) {
