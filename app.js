@@ -5,7 +5,9 @@ const tourRoute = require('./routes/tourRoute');
 const userRoute = require('./routes/userRoute');
 // MiddleWare
 app.use(express.json());
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'developement') {
+  app.use(morgan('dev'));
+}
 app.use(express.static(`${__dirname}/public`));
 app.use((req, res, next) => {
   console.log('Hello from Middleware');
