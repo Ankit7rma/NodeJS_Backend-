@@ -38,6 +38,7 @@ app.get('/api/v1/tours/:id', (req, res) => {
     },
   });
 });
+
 app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'Success',
@@ -66,6 +67,21 @@ app.post('/api/v1/tours', (req, res) => {
   );
 
   //   res.send('Post request finished');
+});
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  res.status(200).json({
+    status: 'Success',
+    data: {
+      tour: 'Updated tour here...',
+    },
+  });
 });
 
 const port = 3000;
