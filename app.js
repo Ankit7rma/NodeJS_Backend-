@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
+
+// MiddleWare
 app.use(express.json());
 // Simple GET POST Request
 // app.get('/', (req, res) =>
