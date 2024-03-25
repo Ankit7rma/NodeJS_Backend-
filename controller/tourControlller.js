@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable prefer-object-spread */
 const fs = require('fs');
 
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`),
 );
 
 exports.checkId = (req, res, next, val) => {
@@ -62,7 +64,7 @@ exports.createTour = (req, res) => {
           tour: newTour,
         },
       });
-    }
+    },
   );
 
   //   res.send('Post request finished');
