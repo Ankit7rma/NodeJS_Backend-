@@ -33,7 +33,28 @@ const Tour = require('../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // eslint-disable-next-line node/no-unsupported-features/es-syntax
+    const queryObject = { ...req.query };
+    const excludeFields = ['sort', 'page', 'fields', 'limit'];
+    excludeFields.forEach((el) => delete queryObject[el]);
+
+    // First Way to filter
+
+    const query = Tour.find(queryObject); //build query
+
+    // const tours = await Tour.find();
+
+    // Second Way to filter
+    // const tours = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+
+    const tours = await query; //execute query
+
+    console.log(req.query, queryObject); // it will give the queries after the route url
+
     res.status(200).json({
       status: 'Success',
       requestedAt: req.requestTime,
