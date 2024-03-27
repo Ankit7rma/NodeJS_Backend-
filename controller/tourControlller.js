@@ -221,19 +221,29 @@ exports.deleteTour = async (req, res) => {
 exports.getTourStats = async (req, res) => {
   try {
     const stats = await Tour.aggregate([
+      // Stage 1: Match tours with ratingsAverage greater than or equal to 4.5
       { $match: { ratingsAverage: { $gte: 4.5 } } },
+
+      // Stage 2: Group tours based on difficulty
       {
         $group: {
-          _id: '$difficulty',
-          numTours: { $sum: 1 },
-          numRatings: { $sum: '$ratingsQuantity' },
-          avgRating: { $avg: '$ratingsAverage' },
-          avgPrice: { $avg: '$price' },
-          minPrice: { $min: '$price' },
-          maxPrice: { $max: '$price' },
+          _id: { $toUpper: '$difficulty' }, // Grouping by difficulty (converting to uppercase)
+          numTours: { $sum: 1 }, // Counting the number of tours in each group
+          numRatings: { $sum: '$ratingsQuantity' }, // Summing up ratingsQuantity for each group
+          avgRating: { $avg: '$ratingsAverage' }, // Calculating the average ratingsAverage for each group
+          avgPrice: { $avg: '$price' }, // Calculating the average price for each group
+          minPrice: { $min: '$price' }, // Finding the minimum price for each group
+          maxPrice: { $max: '$price' }, // Finding the maximum price for each group
         },
       },
+
+      // Stage 3: Sort the results by avgPrice in ascending order
+      { $sort: { avgPrice: 1 } },
+
+      // Optional Stage 4: Additional matching condition, if needed
+      // { $match: { _id: { $ne: 'EASY' } } },
     ]);
+
     res.status(200).json({
       status: 'success',
       data: {
