@@ -1,7 +1,9 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prefer-object-spread */
 const fs = require('fs');
 
+const { json } = require('express');
 const Tour = require('../models/tourModel');
 
 // For testing we read file and executed on that hardcoded data
@@ -34,14 +36,23 @@ const Tour = require('../models/tourModel');
 exports.getAllTours = async (req, res) => {
   try {
     // eslint-disable-next-line node/no-unsupported-features/es-syntax
+    // Filtering
     const queryObject = { ...req.query };
     const excludeFields = ['sort', 'page', 'fields', 'limit'];
     excludeFields.forEach((el) => delete queryObject[el]);
 
     // First Way to filter
 
-    const query = Tour.find(queryObject); //build query
+    // Advance Filtering
 
+    let queryString = JSON.stringify(queryObject);
+    queryString = queryString.replace(
+      /\b(gte|gt|lte|lt)\b/g,
+      (match) => `$${match}`,
+    ); // \b will find the exact word and g will do it multiple times without it will replace the first occurance
+
+    // { duration: { '$lte': 5 }, difficulty: 'easy' }
+    const query = Tour.find(JSON.parse(queryString)); //build query
     // const tours = await Tour.find();
 
     // Second Way to filter
