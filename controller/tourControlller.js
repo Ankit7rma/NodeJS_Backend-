@@ -41,8 +41,6 @@ exports.getAllTours = async (req, res) => {
     const excludeFields = ['sort', 'page', 'fields', 'limit'];
     excludeFields.forEach((el) => delete queryObject[el]);
 
-    // First Way to filter
-
     // Advance Filtering
 
     let queryString = JSON.stringify(queryObject);
@@ -50,8 +48,8 @@ exports.getAllTours = async (req, res) => {
       /\b(gte|gt|lte|lt)\b/g,
       (match) => `$${match}`,
     ); // \b will find the exact word and g will do it multiple times without it will replace the first occurance
-
     // { duration: { '$lte': 5 }, difficulty: 'easy' }
+
     let query = Tour.find(JSON.parse(queryString)); //build query
     // const tours = await Tour.find();
 
@@ -62,6 +60,17 @@ exports.getAllTours = async (req, res) => {
     } else {
       query = query.sort('-createdAt');
     }
+
+    // Limiting Fields  (Showing Only What wanted )
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+
+      query = query.select(fields);
+      // query = query.select('name duration price'); //Example
+    } else {
+      query = query.select('-__v'); //excluding __v
+    }
+
     // If want to sort in descending order use (-)
     // sort("price,ratingsAvg")
 
