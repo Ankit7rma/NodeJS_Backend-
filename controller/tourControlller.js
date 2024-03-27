@@ -54,9 +54,15 @@ exports.getAllTours = async (req, res) => {
     // { duration: { '$lte': 5 }, difficulty: 'easy' }
     let query = Tour.find(JSON.parse(queryString)); //build query
     // const tours = await Tour.find();
+
+    // Sorting
     if (req.query.sort) {
-      query = query.sort(req.query.sort);
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
     }
+    // If want to sort in descending order use (-)
+    // sort("price,ratingsAvg")
+
     // Second Way to filter
     // const tours = await Tour.find()
     //   .where('duration')
