@@ -12,10 +12,11 @@ const {
   // checkId,
   // checkBody,
   aliasTop5Tours,
+  getTourStats,
 } = tourController;
 
 router.route('/top5tours').get(aliasTop5Tours, getAllTours);
-
+router.route('/tourStats').get(getTourStats);
 // router.param('id', checkId);
 router.route('/').get(getAllTours).post(
   // checkBody,
