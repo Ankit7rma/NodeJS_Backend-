@@ -33,6 +33,14 @@ const Tour = require('../models/tourModel');
 //   next();
 // };
 
+exports.aliasTop5Tours = (req, res, next) => {
+  req.query.limit = 5;
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,ratingsAverage,summary,difficulty';
+
+  next();
+};
+
 exports.getAllTours = async (req, res) => {
   try {
     // eslint-disable-next-line node/no-unsupported-features/es-syntax

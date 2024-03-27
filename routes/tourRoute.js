@@ -11,7 +11,10 @@ const {
   deleteTour,
   // checkId,
   // checkBody,
+  aliasTop5Tours,
 } = tourController;
+
+router.route('/top5tours').get(aliasTop5Tours, getAllTours);
 
 // router.param('id', checkId);
 router.route('/').get(getAllTours).post(
