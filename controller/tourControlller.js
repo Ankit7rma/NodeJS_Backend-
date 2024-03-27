@@ -52,9 +52,11 @@ exports.getAllTours = async (req, res) => {
     ); // \b will find the exact word and g will do it multiple times without it will replace the first occurance
 
     // { duration: { '$lte': 5 }, difficulty: 'easy' }
-    const query = Tour.find(JSON.parse(queryString)); //build query
+    let query = Tour.find(JSON.parse(queryString)); //build query
     // const tours = await Tour.find();
-
+    if (req.query.sort) {
+      query = query.sort(req.query.sort);
+    }
     // Second Way to filter
     // const tours = await Tour.find()
     //   .where('duration')
