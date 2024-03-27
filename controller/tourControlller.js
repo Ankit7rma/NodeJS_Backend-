@@ -60,6 +60,8 @@ exports.getAllTours = async (req, res) => {
     } else {
       query = query.sort('-createdAt');
     }
+    // If want to sort in descending order use (-)
+    // sort("price,ratingsAvg")
 
     // Limiting Fields  (Showing Only What wanted )
     if (req.query.fields) {
@@ -71,8 +73,18 @@ exports.getAllTours = async (req, res) => {
       query = query.select('-__v'); //excluding __v
     }
 
-    // If want to sort in descending order use (-)
-    // sort("price,ratingsAvg")
+    // Pagination
+    // page=2&limit=5 1-5.page-1,6-10,page-2
+    const page = req.query.page * 1;
+
+    const limit = req.query.limit * 1;
+    const skip = (page - 1) * limit;
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skip >= numTours) throw new Error('This Page does not exists');
+    }
 
     // Second Way to filter
     // const tours = await Tour.find()
