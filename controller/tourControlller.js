@@ -94,6 +94,7 @@ exports.getAllTours = async (req, res) => {
     //   .equals('easy');
 
     const tours = await query; //execute query
+    // query.sort().select().skip().limit()
 
     console.log(req.query, queryObject); // it will give the queries after the route url
 
