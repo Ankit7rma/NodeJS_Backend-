@@ -260,19 +260,25 @@ exports.getTourStats = async (req, res) => {
 
 exports.getMonthlyPlan = async (req, res) => {
   try {
+    // Extract the year from the request parameters and convert it to a number
     const year = req.params.year * 1;
+
+    // Aggregate tour data using MongoDB aggregation pipeline
     const plan = await Tour.aggregate([
+      // Deconstructs the 'startDates' array field to output a document for each element
       {
-        $unwind: '$startDates', //Deconstructs an array field from the input documents to output a document for each element. Each output document is the input document with the value of the array field replaced by the element.
+        $unwind: '$startDates',
       },
+      // Match documents with 'startDates' falling within the specified year
       {
         $match: {
           startDates: {
-            $gte: new Date(`${year}-01-01`),
-            $lte: new Date(`${year}-12-31`),
+            $gte: new Date(`${year}-01-01`), // Greater than or equal to Jan 1st of the year
+            $lte: new Date(`${year}-12-31`), // Less than or equal to Dec 31st of the year
           },
         },
       },
+      // Group documents by month of 'startDates', counting the number of tours and pushing tour names into an array for each month
       {
         $group: {
           _id: { $month: '$startDates' },
@@ -280,7 +286,29 @@ exports.getMonthlyPlan = async (req, res) => {
           tours: { $push: '$name' },
         },
       },
+      // Add a new field 'month' representing the month extracted from '_id'
+      {
+        $addFields: { month: '$_id' },
+      },
+      // Exclude the '_id' field from the output
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+      // Sort documents by 'numTourStarts' in descending order
+      {
+        $sort: {
+          numTourStarts: -1,
+        },
+      },
+      // Limit the output to 12 documents (for 12 months)
+      {
+        $limit: 12,
+      },
     ]);
+
+    // Send a successful response with the tour plan data
     res.status(200).json({
       status: 'success',
       data: {
@@ -288,6 +316,7 @@ exports.getMonthlyPlan = async (req, res) => {
       },
     });
   } catch (error) {
+    // Send an error response if an error occurs during execution
     res.status(400).json({
       status: 'fail',
       message: error,
