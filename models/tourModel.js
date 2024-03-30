@@ -93,8 +93,16 @@ tourSchema.pre('save', function (next) {
 // });
 
 // Query Middleware
-tourSchema.pre('find', function (next) {
+// tourSchema.pre('find', function (next) {
+tourSchema.pre(/^find/, function (next) {
+  //it will apply to all functions starting with find - find , findOne...
+  this.start = Date.now();
   this.find({ secretTour: { $ne: true } });
+  next();
+});
+tourSchema.post(/^find/, function (docs, next) {
+  console.log(`Query took ${Date.now() - this.start}milliseconds`);
+  // console.log(docs);
   next();
 });
 const Tour = mongoose.model('Tour', tourSchema);
