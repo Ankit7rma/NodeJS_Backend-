@@ -51,7 +51,17 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'A tour must have a price'],
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      // custom Validator
+      validate: {
+        validator: function (val) {
+          // Here this only points to the current doc on NEW document creation not works on update
+          return val < this.price;
+        },
+        message: 'Discoiunt ({VALUE}) is not Valid',
+      },
+    },
     summary: {
       type: String,
       trim: true,
