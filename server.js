@@ -33,7 +33,7 @@ mongoose
 //   .catch((err) => console.log('Error🔥', err));
 
 const port = process.env.Node || 3000;
-app.listen(3000, () => console.log(`Hello from server ${port}`));
+app.listen(port, () => console.log(`Hello from server ${port}`));
 
 // console.log(app.get('env'));
 // console.log(process.env);
