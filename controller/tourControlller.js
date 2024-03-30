@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable node/no-unsupported-features/es-syntax */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prefer-object-spread */
@@ -145,45 +146,63 @@ exports.getTour = async (req, res) => {
   }
 };
 
-exports.createTour = async (req, res) => {
-  console.log(req.body);
+// exports.createTour = async (req, res) => {
+//   console.log(req.body);
 
-  // How we save using making another document then saving that document
-  // const newTour = new Tour();
-  // newTour.save()
-  try {
-    const newTour = await Tour.create(req.body);
-    res.status(201).json({
-      status: 'success',
-      data: {
-        tour: newTour,
-      },
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: 'fail',
-      message: error.message,
-    });
-  }
+//   // How we save using making another document then saving that document
+//   // const newTour = new Tour();
+//   // newTour.save()
+//   try {
+//     const newTour = await Tour.create(req.body);
+//     res.status(201).json({
+//       status: 'success',
+//       data: {
+//         tour: newTour,
+//       },
+//     });
+//   } catch (error) {
+//     res.status(400).json({
+//       status: 'fail',
+//       message: error.message,
+//     });
+//   }
 
-  // How we saved our newtour in creating the existing hardcoded file data
-  // const tourId = tours[tours.length - 1].id + 1;
-  // const newTour = Object.assign({ id: tourId }, req.body);
-  // tours.push(newTour);
-  // fs.writeFile(
-  //   `${__dirname}/dev-data/data/tours-simple.json`,
-  //   JSON.stringify(tours),
-  //   (err) => {
-  // res.status(201).json({
-  //   status: 'success',
-  //   data: {
-  //     tour: newTour,
-  //   },
-  // });
-  //   },
-  // );
-  // res.send('Post request finished');
+//   // How we saved our newtour in creating the existing hardcoded file data
+//   // const tourId = tours[tours.length - 1].id + 1;
+//   // const newTour = Object.assign({ id: tourId }, req.body);
+//   // tours.push(newTour);
+//   // fs.writeFile(
+//   //   `${__dirname}/dev-data/data/tours-simple.json`,
+//   //   JSON.stringify(tours),
+//   //   (err) => {
+//   // res.status(201).json({
+//   //   status: 'success',
+//   //   data: {
+//   //     tour: newTour,
+//   //   },
+//   // });
+//   //   },
+//   // );
+//   // res.send('Post request finished');
+// };
+
+const catchAsync = (fn) => {
+  return (req, res, next) => {
+    fn(req, res, next).catch(next);
+  };
 };
+
+exports.createTour = catchAsync(async (req, res) => {
+  const newTour = await Tour.create(req.body);
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      tour: newTour,
+    },
+  });
+});
+
 exports.updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
