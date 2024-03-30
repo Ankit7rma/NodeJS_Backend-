@@ -24,5 +24,14 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', tourRoute);
 app.use('/api/v1/users', userRoute);
+
+// Handling Unhandled Routes
+app.all('*', (req, res, next) => {
+  res.status(404).json({
+    status: 'Fail',
+    message: `Can't find ${req.originalUrl} on this server`,
+  });
+});
+
 //   Start Server
 module.exports = app;
