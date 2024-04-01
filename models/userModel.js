@@ -1,10 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const mongoose = require('mongoose');
 
-const validateEmail = (email) => {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
+const { isEmail } = require('validator');
+
+// Custom email validation function
+const validateEmailFormat = function (email) {
+  // Regular expression to match a stricter email format
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
 };
+
 // Define the User schema
 const UserSchema = new mongoose.Schema({
   name: {
@@ -16,7 +21,16 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Email is required'],
     unique: true,
     lowercase: true,
-    validate: [validateEmail, 'Please provide a valid Email'],
+    validate: [
+      {
+        validator: isEmail,
+        message: 'Please provide a valid email address',
+      },
+      {
+        validator: validateEmailFormat,
+        message: 'Please provide a valid email address',
+      },
+    ],
   },
   photo: String, // Optional field for user photo
   password: {
