@@ -11,6 +11,7 @@ exports.getAllUsers = catchAsync(async (req, res) => {
     data: { users },
   });
 });
+
 exports.getUser = (req, res) => {
   res.status(500).json({
     status: 'err',
