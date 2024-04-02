@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 // /* eslint-disable import/no-extraneous-dependencies */
 // const mongoose = require('mongoose');
 
@@ -66,7 +67,9 @@
 // module.exports = User;
 
 const mongoose = require('mongoose');
+
 const bcrypt = require('bcrypt');
+
 const { isEmail } = require('validator');
 
 // Custom email validation function
