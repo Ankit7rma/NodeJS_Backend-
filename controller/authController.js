@@ -1,6 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const jwt = require('jsonwebtoken');
 
+const AppError = require('../utils/appError');
+
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 
@@ -23,3 +25,18 @@ exports.signup = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  // Check if email password exists
+  if (!email || !password) {
+    return next(new AppError('Please provide email and password'));
+  }
+  // check if user exists and password exists
+  //if everything ok send token to client
+  const token = '';
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
+};
